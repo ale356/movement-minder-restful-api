@@ -1,0 +1,21 @@
+### api/v1/register
+POST  {{baseURL}}/register
+content-type: application/json
+
+{
+    "username": "{{username}}",
+    "password": "{{password}}",
+    "firstName": "Ellen",
+    "lastName": "Nu",
+    "email": "en999zz@student.lnu.se"
+}
+
+### api/v1/login
+POST  {{baseURL}}/login
+content-type: application/json
+
+{
+    "username": "{{username}}",
+    "password": "{{password}}"
+}
+
