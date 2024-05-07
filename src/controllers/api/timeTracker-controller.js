@@ -6,7 +6,7 @@
  */
 
 import createError from 'http-errors'
-import { Task, TimeTracker } from '../../models/timeTracker.js'
+import { TimeTracker } from '../../models/timeTracker.js'
 
 /**
  * Encapsulates a controller.
