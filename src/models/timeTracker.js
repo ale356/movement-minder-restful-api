@@ -16,12 +16,10 @@ const schema = new mongoose.Schema({
   },
   totalSedentaryTime: {
     type: Number,
-    required: true,
     default: 0
   },
   totalBreakTime: {
     type: Number,
-    required: true,
     default: 0
   }
 }, {
@@ -46,4 +44,4 @@ schema.virtual('id').get(function () {
 })
 
 // Create a model using the schema.
-export const Task = mongoose.model('Task', schema)
+export const TimeTracker = mongoose.model('TimeTracker', schema)
