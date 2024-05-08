@@ -76,7 +76,7 @@ export class AccountController {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        permissionLevel: 4
+        permissionLevel: 7
       })
 
       await user.save()
