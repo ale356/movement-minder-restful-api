@@ -12,7 +12,8 @@ const schema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Reference the User model
-    required: true
+    required: true,
+    unique: true
   },
   totalSedentaryTime: {
     type: Number,
