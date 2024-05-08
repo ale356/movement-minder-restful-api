@@ -47,8 +47,6 @@ const authenticateJWT = (req, res, next) => {
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
     req.user = {
       username: payload.sub,
-      firstName: payload.given_name,
-      lastName: payload.family_name,
       email: payload.email,
       permissionLevel: payload.x_permission_level
     }
@@ -107,14 +105,14 @@ router.post('/',
   (req, res, next) => controller.create(req, res, next)
 )
 
-// PUT tasks/:id
+// PUT timeTrackers/:id
 router.put('/:id',
   authenticateJWT,
   (req, res, next) => hasPermission(req, res, next, PermissionLevels.UPDATE),
   (req, res, next) => controller.update(req, res, next)
 )
 
-// DELETE tasks/:id
+// DELETE timeTrackers/:id
 router.delete('/:id',
   authenticateJWT,
   (req, res, next) => hasPermission(req, res, next, PermissionLevels.DELETE),

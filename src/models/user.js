@@ -13,16 +13,6 @@ const { isEmail } = validator
 
 // Create a schema.
 const schema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: [true, 'First name is required.'],
-    trim: true
-  },
-  lastName: {
-    type: String,
-    required: [true, 'Last name is required.'],
-    trim: true
-  },
   email: {
     type: String,
     required: [true, 'Email address is required.'],
@@ -102,8 +92,6 @@ schema.statics.createAdminAccountIfNotExists = async function () {
     const admin = new this({
       username: process.env.ADMIN_USER_NAME,
       password: process.env.ADMIN_PASSWORD,
-      firstName: process.env.ADMIN_FIRST_NAME,
-      lastName: process.env.ADMIN_LAST_NAME,
       email: process.env.ADMIN_EMAIL,
       permissionLevel: 15
     })

@@ -27,8 +27,6 @@ export class AccountController {
 
       const payload = {
         sub: user.username,
-        given_name: user.firstName,
-        family_name: user.lastName,
         email: user.email,
         x_permission_level: user.permissionLevel
       }
@@ -73,8 +71,6 @@ export class AccountController {
       const user = new User({
         username: req.body.username,
         password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
         email: req.body.email,
         permissionLevel: 7
       })

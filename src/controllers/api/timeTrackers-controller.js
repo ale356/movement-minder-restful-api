@@ -32,7 +32,7 @@ export class TimeTrackersController {
       }
 
       // Provide the timeTracker to req.
-      req.task = timeTracker
+      req.timeTracker = timeTracker
 
       // Next middleware.
       next()
