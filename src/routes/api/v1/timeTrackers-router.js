@@ -8,11 +8,11 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
-import { TasksController } from '../../../controllers/api/tasks-controller.js'
+import { TimeTrackersController } from '../../../controllers/api/timeTrackers-controller.js'
 
 export const router = express.Router()
 
-const controller = new TasksController()
+const controller = new TimeTrackersController()
 
 // ------------------------------------------------------------------------------
 //  Helpers
@@ -83,24 +83,24 @@ const hasPermission = (req, res, next, permissionLevel) => {
 //  Routes
 // ------------------------------------------------------------------------------
 
-// Provide req.task to the route if :id is present in the route path.
-router.param('id', (req, res, next, id) => controller.loadTask(req, res, next, id))
+// Provide req.timeTracker to the route if :id is present in the route path.
+router.param('id', (req, res, next, id) => controller.loadTimeTracker(req, res, next, id))
 
-// GET tasks
+// GET timeTrackers
 router.get('/',
   authenticateJWT,
   (req, res, next) => hasPermission(req, res, next, PermissionLevels.READ),
   (req, res, next) => controller.findAll(req, res, next)
 )
 
-// GET tasks/:id
+// GET timeTrackers/:id
 router.get('/:id',
   authenticateJWT,
   (req, res, next) => hasPermission(req, res, next, PermissionLevels.READ),
   (req, res, next) => controller.find(req, res, next)
 )
 
-// POST tasks
+// POST timeTrackers
 router.post('/',
   authenticateJWT,
   (req, res, next) => hasPermission(req, res, next, PermissionLevels.CREATE),
