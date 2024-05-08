@@ -8,6 +8,7 @@
 import express from 'express'
 import helmet from 'helmet'
 import logger from 'morgan'
+import cors from 'cors'
 import { router } from './routes/router.js'
 import { connectDB } from './config/mongoose.js'
 import { User } from './models/user.js'
@@ -26,6 +27,9 @@ try {
 
   // Parse requests of the content type application/json.
   app.use(express.json())
+
+  // Register cors middleware to enable CORS.
+  app.use(cors())
 
   // Register routes.
   app.use('/', router)
