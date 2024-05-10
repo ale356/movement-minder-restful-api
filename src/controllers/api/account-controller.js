@@ -9,6 +9,7 @@
 import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import { User } from '../../models/user.js'
+import { TimeTracker } from '../../models/timeTracker.js'
 
 /**
  * Encapsulates a controller.
@@ -77,6 +78,13 @@ export class AccountController {
       })
 
       await user.save()
+
+      // Create a timeTracker object for the user.
+      const timeTracker = new TimeTracker({
+        userId: req.body.userId,
+      })
+
+      await timeTracker.save()
 
       res
         .status(201)
