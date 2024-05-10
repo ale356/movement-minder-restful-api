@@ -77,11 +77,12 @@ export class AccountController {
         permissionLevel: 7
       })
 
-      await user.save()
+      const savedUser = await user.save()
+      const userIdString = savedUser._id.toString()
 
       // Create a timeTracker object for the user.
       const timeTracker = new TimeTracker({
-        userId: req.body.userId,
+        userId: userIdString,
       })
 
       await timeTracker.save()
