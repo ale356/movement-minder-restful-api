@@ -9,6 +9,7 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import { TimeTrackersController } from '../../../controllers/api/timeTrackers-controller.js'
+import { TimeTracker } from '../../../models/timeTracker.js'
 
 export const router = express.Router()
 
@@ -46,7 +47,8 @@ const authenticateJWT = (req, res, next) => {
 
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
     req.user = {
-      username: payload.sub,
+      userId: payload.user_id,
+      username: payload.username,
       email: payload.email,
       permissionLevel: payload.x_permission_level
     }
@@ -55,6 +57,45 @@ const authenticateJWT = (req, res, next) => {
   } catch (err) {
     const error = createError(401)
     error.cause = err
+    next(error)
+  }
+}
+
+/**
+ * Authorize requests for specific resources.
+ *
+ * If authorization is successful, that is the user is granted access
+ * to the requested resource, the request is authorized to continue.
+ * If authentication fails, a forbidden response will be sent.
+ *
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
+const hasPermissionForSpecificResource = async (req, res, next) => {
+  try {
+    // Get the timeTrackerId from the request.url
+    const timeTrackerId = req.url.slice(1)
+
+    // Get the requesters userId from the request.
+    const reqUserId = req.user.userId
+
+    // Use the method findOne() to search for a specific timeTracker object in the database with the timeTrackerId.
+    const timeTrackerObject = await TimeTracker.findById(timeTrackerId)
+
+    // Check if the requested timeTracker dont exist.
+    if (timeTrackerObject === null) {
+      next(createError(404))
+      return
+    }
+
+    // Compare timeTrackerObject object property userId to request userId. If match approve otherwise send an 403.
+    if (reqUserId === timeTrackerObject.userId) {
+      next()
+    } else {
+      next(createError(403))
+    }
+  } catch (error) {
     next(error)
   }
 }
