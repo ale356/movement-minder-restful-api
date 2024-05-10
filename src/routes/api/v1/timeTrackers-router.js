@@ -82,6 +82,7 @@ const hasPermissionForSpecificResource = async (req, res, next) => {
 
     // Use the method findOne() to search for a specific timeTracker object in the database with the timeTrackerId.
     const timeTrackerObject = await TimeTracker.findById(timeTrackerId)
+    const timeTrackerUserId = timeTrackerObject.userId.toString()
 
     // Check if the requested timeTracker dont exist.
     if (timeTrackerObject === null) {
@@ -90,7 +91,7 @@ const hasPermissionForSpecificResource = async (req, res, next) => {
     }
 
     // Compare timeTrackerObject object property userId to request userId. If match approve otherwise send an 403.
-    if (reqUserId === timeTrackerObject.userId) {
+    if (reqUserId === timeTrackerUserId) {
       next()
     } else {
       next(createError(403))
@@ -135,7 +136,7 @@ router.get('/',
 // GET timeTrackers/:id
 router.get('/:id',
   authenticateJWT,
-  (req, res, next) => hasPermission(req, res, next, PermissionLevels.READ),
+  (req, res, next) => hasPermissionForSpecificResource(req, res, next),
   (req, res, next) => controller.find(req, res, next)
 )
 
@@ -149,13 +150,13 @@ router.post('/',
 // PUT timeTrackers/:id
 router.put('/:id',
   authenticateJWT,
-  (req, res, next) => hasPermission(req, res, next, PermissionLevels.UPDATE),
+  (req, res, next) => hasPermissionForSpecificResource(req, res, next),
   (req, res, next) => controller.update(req, res, next)
 )
 
 // DELETE timeTrackers/:id
 router.delete('/:id',
   authenticateJWT,
-  (req, res, next) => hasPermission(req, res, next, PermissionLevels.DELETE),
+  (req, res, next) => hasPermissionForSpecificResource(req, res, next),
   (req, res, next) => controller.delete(req, res, next)
 )
