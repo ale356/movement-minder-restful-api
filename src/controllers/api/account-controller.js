@@ -22,12 +22,16 @@ export class AccountController {
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
-  async login (req, res, next) {
+  async login(req, res, next) {
     try {
       const user = await User.authenticate(req.body.username, req.body.password)
 
+      // Get the timeTracker id for the payload.
+      const timeTracker = await TimeTracker.findOne({ userId: user.id });
+
       const payload = {
         user_id: user.id,
+        timeTrackerId: timeTracker ? timeTracker.id : null, // If timeTracker found, include its ID, otherwise null.
         username: user.username,
         email: user.email,
         x_permission_level: user.permissionLevel
@@ -68,7 +72,7 @@ export class AccountController {
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
-  async register (req, res, next) {
+  async register(req, res, next) {
     try {
       const user = new User({
         username: req.body.username,
