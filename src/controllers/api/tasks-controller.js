@@ -1,39 +1,38 @@
 /**
- * Module for the TimeTrackerController.
+ * Module for the TasksController.
  *
  * @author Mats Loock
- * @author Alejandro Lindström Mamani
  * @version 2.0.0
  */
 
 import createError from 'http-errors'
-import { TimeTracker } from '../../models/timeTracker.js'
+import { Task } from '../../models/task.js'
 
 /**
  * Encapsulates a controller.
  */
-export class TimeTrackersController {
+export class TasksController {
   /**
-   * Provide req.timeTracker to the route if :id is present.
+   * Provide req.task to the route if :id is present.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
-   * @param {string} id - The value of the id for the timeTracker to load.
+   * @param {string} id - The value of the id for the task to load.
    */
-  async loadTimeTracker (req, res, next, id) {
+  async loadTask (req, res, next, id) {
     try {
-      // Get the timeTracker.
-      const timeTracker = await TimeTracker.findById(id)
+      // Get the task.
+      const task = await Task.findById(id)
 
-      // If no timeTracker found send a 404 (Not Found).
-      if (!timeTracker) {
+      // If no task found send a 404 (Not Found).
+      if (!task) {
         next(createError(404))
         return
       }
 
-      // Provide the timeTracker to req.
-      req.timeTracker = timeTracker
+      // Provide the task to req.
+      req.task = task
 
       // Next middleware.
       next()
@@ -43,18 +42,18 @@ export class TimeTrackersController {
   }
 
   /**
-   * Sends a JSON response containing a timeTracker.
+   * Sends a JSON response containing a task.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
   async find (req, res, next) {
-    res.json(req.timeTracker)
+    res.json(req.task)
   }
 
   /**
-   * Sends a JSON response containing all timeTrackers.
+   * Sends a JSON response containing all tasks.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -62,16 +61,16 @@ export class TimeTrackersController {
    */
   async findAll (req, res, next) {
     try {
-      const timeTrackers = await TimeTracker.find()
+      const tasks = await Task.find()
 
-      res.json(timeTrackers)
+      res.json(tasks)
     } catch (error) {
       next(error)
     }
   }
 
   /**
-   * Creates a new timeTracker.
+   * Creates a new task.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -79,27 +78,28 @@ export class TimeTrackersController {
    */
   async create (req, res, next) {
     try {
-      const timeTracker = new TimeTracker({
-        userId: req.body.userId
+      const task = new Task({
+        description: req.body.description,
+        done: req.body.done
       })
 
-      await timeTracker.save()
+      await task.save()
 
       const location = new URL(
-        `${req.protocol}://${req.get('host')}${req.baseUrl}/${timeTracker._id}`
+        `${req.protocol}://${req.get('host')}${req.baseUrl}/${task._id}`
       )
 
       res
         .location(location.href)
         .status(201)
-        .json(timeTracker)
+        .json(task)
     } catch (error) {
       next(error)
     }
   }
 
   /**
-   * Updates a specific timeTracker.
+   * Updates a specific task.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -107,16 +107,10 @@ export class TimeTrackersController {
    */
   async update (req, res, next) {
     try {
-      // Only save the valid properties on the request body.
-      for (const field in req.body) {
-        // Check if the field exists in the timeTracker schema.
-        if (Object.prototype.hasOwnProperty.call(req.timeTracker.schema.obj, field)) {
-          // Update the corresponding property of the timeTracker object with the value from the request body.
-          req.timeTracker[field] = req.body[field]
-        }
-      }
+      req.task.description = req.body.description
+      req.task.done = req.body.done
 
-      await req.timeTracker.save()
+      await req.task.save()
 
       res
         .status(204)
@@ -127,7 +121,7 @@ export class TimeTrackersController {
   }
 
   /**
-   * Deletes the specified timeTracker.
+   * Deletes the specified task.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -135,7 +129,7 @@ export class TimeTrackersController {
    */
   async delete (req, res, next) {
     try {
-      await req.timeTracker.deleteOne()
+      await req.task.deleteOne()
 
       res
         .status(204)

@@ -2,6 +2,7 @@
  * Mongoose model User.
  *
  * @author Mats Loock
+ * @author Alejandro Lindström Mamani
  * @version 2.0.0
  */
 
@@ -81,25 +82,6 @@ schema.statics.authenticate = async function (username, password) {
 
   // User found and password correct, return the user.
   return user
-}
-
-/**
- * Creates an admin user account if it does not exist.
- */
-schema.statics.createAdminAccountIfNotExists = async function () {
-  const existingAdmin = await this.findOne({ username: process.env.ADMIN_USER_NAME })
-  if (!existingAdmin) {
-    const admin = new this({
-      username: process.env.ADMIN_USER_NAME,
-      password: process.env.ADMIN_PASSWORD,
-      email: process.env.ADMIN_EMAIL,
-      permissionLevel: 15
-    })
-    await admin.save()
-    console.log('Admin account created successfully.')
-  } else {
-    console.log('Admin account already exists.')
-  }
 }
 
 // Create a model using the schema.

@@ -2,6 +2,7 @@
  * Module for the AccountController.
  *
  * @author Mats Loock
+ * @author Alejandro Lindström Mamani
  * @version 2.0.0
  */
 
@@ -22,12 +23,12 @@ export class AccountController {
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
-  async login(req, res, next) {
+  async login (req, res, next) {
     try {
       const user = await User.authenticate(req.body.username, req.body.password)
 
       // Get the timeTracker id for the payload.
-      const timeTracker = await TimeTracker.findOne({ userId: user.id });
+      const timeTracker = await TimeTracker.findOne({ userId: user.id })
 
       const payload = {
         user_id: user.id,
@@ -72,7 +73,7 @@ export class AccountController {
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
-  async register(req, res, next) {
+  async register (req, res, next) {
     try {
       const user = new User({
         username: req.body.username,
@@ -86,7 +87,7 @@ export class AccountController {
 
       // Create a timeTracker object for the user.
       const timeTracker = new TimeTracker({
-        userId: userIdString,
+        userId: userIdString
       })
 
       await timeTracker.save()

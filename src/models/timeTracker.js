@@ -1,7 +1,7 @@
 /**
  * Mongoose model TimeTracker.
  *
- * @author Mats Loock
+ * @author Alejandro Lindström Mamani
  * @version 2.0.0
  */
 
