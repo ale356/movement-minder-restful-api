@@ -1,0 +1,3 @@
+### api/v1/timeTrackers
+GET  {{baseURL}}/timeTrackers
+Authorization: Bearer {{accessToken}}
